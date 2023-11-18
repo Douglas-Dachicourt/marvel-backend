@@ -12,7 +12,16 @@ app.use(cors())
 app.get("/characters", async (req, res) =>{
     try {
         const response = await axios.get(`https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}`)
-        // console.log(response.data);
+        console.log(response.data);
+
+const {name, skip, limit } = req.query
+const filter = {}
+
+if (name){
+    filter.name =new RegExp(name, "i")
+}
+
+
 
         res.status(200).json(response.data);
 
@@ -52,19 +61,27 @@ app.get("/comics",async (req,res) =>{
 })
 
 
+app.get("/comics/:characterId", async (req,res) =>{
+    try {
+        const response = await axios.get(`https://lereacteur-marvel-api.herokuapp.com/comics/${req.params.characterId}?apiKey=${process.env.API_KEY}`)
+        console.log(response.data);
+        
+    } catch (error) {
+        res.status(500).json({message : error.message})
+    }
+})
+
 app.get("/comic/:comicId",async (req,res)=>{
 
 try {
     const response =await axios.get(`https://lereacteur-marvel-api.herokuapp.com/comic/${req.params.comicId}?apiKey=${process.env.API_KEY}`)
-    console.log(response.data);
+    // console.log(response.data);
     res.status(200).json(response.data)
     
 } catch (error) {
     res.status(500).json({message : error.message})
     
 }
-
-
 
 })
 
